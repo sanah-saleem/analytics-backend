@@ -9,6 +9,8 @@ async function bootstrap() {
     logger: ['log','error','warn','debug','verbose'],
   });
 
+  app.enableShutdownHooks();
+
   app.use(helmet());
   app.enableCors({ origin: true, credentials: true });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }));

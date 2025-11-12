@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  provider  String   // "google" (for admin console later)
+  createdAt DateTime @default(now())
+  apps      App[]
+}
+
+model App {
+  id        String   @id @default(cuid())
+  name      String
+  ownerId   String
+  owner     User     @relation(fields: [ownerId], references: [id])
+  apiKeys   ApiKey[]
+  createdAt DateTime @default(now())
+}
+
+model ApiKey {
+  id        String   @id @default(cuid())
+  appId     String
+  app       App      @relation(fields: [appId], references: [id])
+  keyPrefix String   // e.g., "ak_4f8d"
+  keyHash   String   // bcrypt/argon2 of the full key
+  status    String   // "active" | "revoked"
+  expiresAt DateTime?
+  createdAt DateTime @default(now())
+  regeneratedFromId String?
+  @@index([appId, status])
+  @@index([keyPrefix])
+}
+
+model Event {
+  id        BigInt   @id @default(autoincrement())
+  appId     String
+  event     String
+  url       String?
+  referrer  String?
+  device    String?  // "mobile" | "desktop" | "tablet"
+  ipAddress String?
+  userId    String?
+  ts        DateTime @default(now())
+  metadata  Json?
+
+  @@index([appId, event, ts])
+  @@index([userId, ts])
+  @@index([device, ts])
+}
