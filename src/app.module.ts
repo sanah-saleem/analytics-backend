@@ -5,6 +5,7 @@ import { PrismaModule } from './common/prisma.module';
 import { ApiKeyModule } from './apikey/apikey.module';
 import { RedisModule } from './common/redis.module';
 import { IngestModule } from './ingest/ingest.module';
+import { AnalyticsModule } from './analytics/analytics.module';
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { IngestModule } from './ingest/ingest.module';
     HealthModule,
     ApiKeyModule,
     RedisModule,
-    IngestModule
+    IngestModule,
+    AnalyticsModule
   ],
   controllers: [],
   providers: [],
