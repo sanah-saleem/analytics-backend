@@ -92,8 +92,12 @@ export class ApiKeyService {
 
     //utility for later api-key auth
     async verifyFulKeyAndGetApp(fullKey: string) {
-        const [prefix] = fullKey.split('_', 2); // "ak_xxxx"
-        if (!prefix) throw new BadRequestException('Malformed API key');
+        const parts = fullKey.split('_');   // "ak_xxxx_yyyyyyyyyy....."
+        if (parts.length < 3 || parts[0] !== 'ak') {
+            throw new BadRequestException('Malformed API key');
+        }
+        const prefix = `${parts[0]}_${parts[1]}`;   //"ak_ab12"
+
         const candidates = await this.prisma.apiKey.findMany({ where: { keyPrefix: prefix, status: 'active' } });
         for (const k of candidates) {
         if (k.expiresAt && k.expiresAt < new Date()) continue;
