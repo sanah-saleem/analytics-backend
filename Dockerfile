@@ -11,6 +11,11 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . .
+
+# Provide a dummy URL so `npx prisma generate` doesn't fail during image build (!! for railway deploy fail !!)
+ARG DUMMY_DATABASE_URL="postgresql://user:pass@localhost:5432/dummy?schema=public"
+ENV DATABASE_URL=${DUMMY_DATABASE_URL}
+
 # Generate Prisma client for the targets defined in schema.prisma
 RUN npx prisma generate
 RUN npm run build
