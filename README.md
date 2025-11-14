@@ -13,6 +13,10 @@
 **Swagger Docs:**  
 📘 [https://analytics-backend-production-894f.up.railway.app/docs](https://analytics-backend-production-894f.up.railway.app/docs)
 
+**Postman Collection**
+Download & import this Postman collection to test all endpoints easily:
+[postman/analytics-api-collection.json](postman/analytics-api-collection.json)
+
 ---
 
 ## 📖 Overview

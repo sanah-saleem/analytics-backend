@@ -1,0 +1,291 @@
+{
+	"info": {
+		"_postman_id": "7b7ec2ce-0449-42fb-a2b3-03eaaa60e8a5",
+		"name": "Analytics API - sanah",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25145835"
+	},
+	"item": [
+		{
+			"name": "Register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let json = pm.response.json();\r",
+							"pm.environment.set(\"appId\", json.app.id);\r",
+							"pm.environment.set(\"apiKey\", json.apiKey);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-dev-user",
+						"value": "{{devUser}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\":\"My Demo App\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/auth/register",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Keys",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-dev-user",
+						"value": "{{devUser}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/api/auth/api-key",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"api-key"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Revoke Key",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-dev-user",
+						"value": "{{devUser}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"apiKeyId\":\"YOUR_KEY_ID\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/auth/revoke",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"revoke"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Regenerate Key",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-dev-user",
+						"value": "{{devUser}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"apiKeyId\":\"YOUR_KEY_ID\",\r\n    \"expiresAt\":\"2026-01-01T00:00:00Z\"      //optional\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/auth/regenerate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"auth",
+						"regenerate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Send Analytics Event",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"event\": \"login_form_cta_click\",\r\n  \"url\": \"https://example.com/page\",\r\n  \"referrer\": \"https://google.com\",\r\n  \"device\": \"mobile\",\r\n  \"metadata\": {\r\n    \"browser\": \"Chrome\",\r\n    \"os\": \"Android\",\r\n    \"screenSize\": \"1080x1920\"\r\n  },\r\n  \"userId\": \"user_123\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/analytics/collect",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"analytics",
+						"collect"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Event Summary",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/api/analytics/event-summary?event=login_form_cta_click",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"analytics",
+						"event-summary"
+					],
+					"query": [
+						{
+							"key": "event",
+							"value": "login_form_cta_click"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Stats",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/api/analytics/user-stats?userId=user_123",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"analytics",
+						"user-stats"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "user_123"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/healthz",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"healthz"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DB Health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/healthz/db",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"healthz",
+						"db"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
