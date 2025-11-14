@@ -1,98 +1,386 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+# 🌍 Website Analytics API  
+> A scalable backend for collecting and aggregating website & app analytics events  
+> **Built with NestJS · Prisma · PostgreSQL · Redis · Docker · Deployed on Railway**
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 🚀 Live Demo
+**Base URL:**  
+🔗 [https://analytics-backend-production-894f.up.railway.app](https://analytics-backend-production-894f.up.railway.app)
 
-## Project setup
+**Swagger Docs:**  
+📘 [https://analytics-backend-production-894f.up.railway.app/docs](https://analytics-backend-production-894f.up.railway.app/docs)
+
+---
+
+## 📖 Overview
+This API allows websites or mobile apps to send structured analytics events — such as clicks, visits, and device data — and then query aggregated reports for insights.  
+It includes:
+- 🔐 API Key Management  
+- 📊 Event Collection & Aggregation  
+- ⚡ Redis Caching  
+- 🧠 Rate Limiting  
+- 🧰 Dockerized deployment  
+- ✅ Tested & documented endpoints
+
+---
+
+## 🧩 Features
+
+| Category | Highlights |
+|-----------|-------------|
+| **API Key Management** | Register apps, issue/revoke/regenerate keys, handle expiry |
+| **Event Collection** | `/api/analytics/collect` accepts events with `x-api-key` |
+| **Analytics Reports** | `/api/analytics/event-summary` and `/api/analytics/user-stats` |
+| **Caching** | Redis caching for frequent queries |
+| **Security** | Helmet, CORS, bcrypt hashing for API keys |
+| **Performance** | Rate limiting for ingestion & analytics |
+| **Docs** | Swagger UI for all endpoints |
+
+---
+
+## 🧠 Tech Stack
+- **NestJS** (framework)  
+- **Prisma ORM** (PostgreSQL)  
+- **Redis** (caching & rate limiting)  
+- **Docker + Docker Compose**  
+- **Railway** (cloud hosting)  
+- **Jest + Supertest** (testing)  
+
+---
+
+## ⚙️ Local Setup
+
+### 1️⃣ Clone & configure
+```bash
+git clone https://github.com/<your-username>/analytics-api.git
+cd analytics-api
+cp .env.example .env
+````
+
+### 2️⃣ Start the stack
 
 ```bash
-$ npm install
+docker compose up -d --build
 ```
 
-## Compile and run the project
+### 3️⃣ Verify
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+curl http://localhost:3000/healthz
+curl http://localhost:3000/healthz/db
 ```
 
-## Run tests
+Swagger Docs → [http://localhost:3000/docs](http://localhost:3000/docs)
 
-```bash
-# unit tests
-$ npm run test
+---
 
-# e2e tests
-$ npm run test:e2e
 
-# test coverage
-$ npm run test:cov
+# API Endpoint Reference
+
+Base URL (Prod): `https://analytics-backend-production-894f.up.railway.app`
+
+Auth model:
+* **Developer (dev-only)**: `x-dev-user: <email>` (for app registration & key listing)
+* **App**: `x-api-key: <issued API key>` (for ingestion & analytics)
+
+Rate limits (defaults):
+
+* **Ingestion**: 100 req/s per API key
+* **Reads (analytics)**: 20 req/s per API key
+
+## Health
+
+### GET `/healthz`
+
+Returns service status.
+
+```json
+{ "status": "ok", "time": "2025-11-14T10:20:30.000Z" }
 ```
 
-## Deployment
+### GET `/healthz/db`
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Checks DB connectivity.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+```json
+{ "db": "ok", "time": "2025-11-14T10:20:30.000Z" }
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## API Key Management (dev-only)
 
-Check out a few resources that may come in handy when working with NestJS:
+> Use **`x-dev-user: you@example.com`** header.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### POST `/api/auth/register`
 
-## Support
+Registers a new app and returns **one** plaintext API key (shown only once).
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+**Headers**
 
-## Stay in touch
+```
+Content-Type: application/json
+x-dev-user: you@example.com
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+**Body**
 
-## License
+```json
+{ "name": "My Demo App" }
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+**200 Response**
+
+```json
+{
+  "app": { "id": "app_cuid", "name": "My Demo App", "ownerId": "user_cuid", "createdAt": "..." },
+  "apiKey": "ak_ab12_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "apiKeyId": "key_cuid",
+  "prefix": "ak_ab12",
+  "expiresAt": null
+}
+```
+
+### GET `/api/auth/api-key`
+
+Lists API key **metadata** (never returns plaintext keys).
+
+**Headers**
+
+```
+x-dev-user: you@example.com
+```
+
+**Query (optional)**
+
+* `appId`: if provided, list keys for that app; else list for all your apps.
+  **200 Response**
+
+```json
+[
+  {
+    "app": { "id": "app_cuid", "name": "My Demo App", "ownerId": "user_cuid", "createdAt": "..." },
+    "keys": [
+      { "id": "key_cuid", "keyPrefix": "ak_ab12", "status": "active", "createdAt": "...", "expiresAt": null }
+    ]
+  }
+]
+```
+
+### POST `/api/auth/revoke`
+
+Revokes an API key (cannot be used afterwards).
+
+**Headers**
+
+```
+Content-Type: application/json
+x-dev-user: you@example.com
+```
+
+**Body**
+
+```json
+{ "apiKeyId": "key_cuid" }
+```
+
+**200 Response**
+
+```json
+{ "id": "key_cuid", "status": "revoked" }
+```
+
+### POST `/api/auth/regenerate`
+
+Revokes old key and issues a new plaintext key.
+
+**Headers**
+
+```
+Content-Type: application/json
+x-dev-user: you@example.com
+```
+
+**Body**
+
+```json
+{ "apiKeyId": "key_cuid", "expiresAt": "2026-01-01T00:00:00Z" }
+```
+
+**200 Response**
+
+```json
+{
+  "apiKeyId": "new_key_cuid",
+  "apiKey": "ak_cd34_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "prefix": "ak_cd34",
+  "expiresAt": "2026-01-01T00:00:00.000Z"
+}
+```
+
+---
+
+## Event Ingestion
+
+### POST `/api/analytics/collect`
+
+Submits an analytics event.
+
+**Headers**
+
+```
+Content-Type: application/json
+x-api-key: <YOUR_API_KEY>
+```
+
+**Body**
+
+```json
+{
+  "event": "login_form_cta_click",
+  "url": "https://example.com/page",
+  "referrer": "https://google.com",
+  "device": "mobile",
+  "userId": "user789",
+  "timestamp": "2024-02-20T12:34:56Z",
+  "metadata": { "browser": "Chrome", "os": "Android", "screenSize": "1080x1920" }
+}
+```
+
+**202 Response**
+
+```json
+{ "status": "accepted" }
+```
+
+Notes:
+
+* `timestamp` optional (server time used if omitted)
+* `metadata` is arbitrary JSON (keep small, e.g., <8KB)
+
+---
+
+## Analytics Queries
+
+### GET `/api/analytics/event-summary`
+
+Returns counts and device breakdown for an event.
+
+**Headers**
+
+```
+x-api-key: <YOUR_API_KEY>
+```
+
+**Query**
+
+* `event` (string, required)
+* `startDate` (ISO date/datetime, optional)
+* `endDate` (ISO date/datetime, optional)
+* `app_id` (string, optional; defaults to current app)
+  **200 Response**
+
+```json
+{
+  "event": "login_form_cta_click",
+  "count": 3400,
+  "uniqueUsers": 1200,
+  "deviceData": { "mobile": 2200, "desktop": 1200, "unknown": 0 },
+  "range": { "start":"2024-02-15T00:00:00.000Z", "end":"2024-02-20T00:00:00.000Z" }
+}
+```
+
+### GET `/api/analytics/user-stats`
+
+Returns per-user totals and recent events.
+
+**Headers**
+
+```
+x-api-key: <YOUR_API_KEY>
+```
+
+**Query**
+
+* `userId` (string, required)
+* `app_id` (string, optional; defaults to current app)
+  **200 Response**
+
+```json
+{
+  "userId": "user789",
+  "totalEvents": 150,
+  "recentEvents": [
+    { "ts":"2025-11-14T08:00:00Z", "device":"mobile", "ipAddress":null, "metadata":{"browser":"Chrome","os":"Android"}, "event":"login_form_cta_click", "url":"...", "referrer":"..." }
+  ],
+  "deviceDetails": { "browser":"Chrome", "os":"Android" },
+  "ipAddress": "192.168.1.1"
+}
+```
+
+---
+
+## Errors & Status Codes
+
+| Code                        | When                                                                         |
+| --------------------------- | ---------------------------------------------------------------------------- |
+| `400 Bad Request`           | Invalid DTO / missing required fields                                        |
+| `401 Unauthorized`          | Missing `x-api-key` (ingest/analytics) or missing `x-dev-user` (auth routes) |
+| `403 Forbidden`             | Invalid or revoked/expired API key                                           |
+| `404 Not Found`             | Wrong method/URL (e.g., `GET` on a `POST` route)                             |
+| `429 Too Many Requests`     | Rate limit exceeded (ingest/read)                                            |
+| `500 Internal Server Error` | Unexpected server error                                                      |
+
+---
+
+## 🧰 Development Scripts
+
+| Command                  | Description                 |
+| ------------------------ | --------------------------- |
+| `npm run start:dev`      | Start Nest in watch mode    |
+| `npm run build`          | Compile to `dist`           |
+| `npm run start:prod:db`  | Run DB migrations & start   |
+| `npm run test`           | Run Jest tests              |
+| `npx prisma studio`      | Visual DB explorer          |
+| `docker compose down -v` | Stop & clean all containers |
+
+---
+
+## 🧪 Quick Live Tests
+
+| Endpoint                       | Method | Description                                    |
+| ------------------------------ | ------ | ---------------------------------------------- |
+| `/healthz`                     | GET    | Server heartbeat                               |
+| `/healthz/db`                  | GET    | Database connection status                     |
+| `/api/auth/register`           | POST   | Register a new app and issue a new API key     |
+| `/api/auth/api-key`            | GET    | Retrieve API key metadata for your apps        |
+| `/api/auth/revoke`             | POST   | Revoke an existing API key                     |
+| `/api/auth/regenerate`         | POST   | Regenerate a new API key (revokes old one)     |
+| `/api/analytics/collect`       | POST   | Submit analytics event data                    |
+| `/api/analytics/event-summary` | GET    | Retrieve aggregated analytics summary by event |
+| `/api/analytics/user-stats`    | GET    | View detailed stats for a specific user        |
+
+---
+
+## 🧠 Future Enhancements
+
+* OAuth onboarding for apps
+* Asynchronous ingestion queue (Kafka/RabbitMQ)
+* Frontend dashboard with charts
+* API key usage analytics
+* Alerting & monitoring hooks
+
+---
+
+## 🧑‍💻 Author
+
+**Sanah Saleem**
+Full-stack Developer
+📧 [sanahsaleem2000@gmail.com](mailto:sanahsaleem200@gmail.com)
+🔗 [LinkedIn](https://www.linkedin.com/in/sanah-saleem-b81598203)
+
+---
+
