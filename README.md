@@ -368,6 +368,24 @@ x-api-key: <YOUR_API_KEY>
 | `/api/analytics/user-stats`    | GET    | View detailed stats for a specific user        |
 
 ---
+## 🧪 Testing Guide
+
+**Unit tests** (services/guards under `src/`):
+```bash
+npm run test
+```
+
+**E2E tests** (HTTP-level tests under `test/`):
+```bash
+npm run test:e2e
+```
+
+**coverage** (unit only by default)
+```bash
+npm run test:cov
+```
+
+---
 
 ## 🧠 Future Enhancements
 
