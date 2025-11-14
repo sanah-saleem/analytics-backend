@@ -3,7 +3,7 @@ import { ApiKeyGuard } from "./api-key.guard";
 import { RateLimitInterceptor } from "./rate-limit.interceptor";
 import { IngestService } from './ingest.service';
 import { CollectEventDto } from "./dto";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiHeader, ApiTags } from "@nestjs/swagger";
 
 @ApiTags('Aalytics / Ingestion')
 @Controller('api/analytics')
@@ -13,6 +13,11 @@ export class IngestController {
     constructor(private readonly service: IngestService) {}
 
     @Post('collect')
+    @ApiHeader({
+      name: 'x-api-key',
+      description: 'API key for authenticating analytics requests',
+      required: true,
+    })
     @HttpCode(202)
     async collect(@Body() body: CollectEventDto, @Ip() ip: string, @Req() req: any) {
         const appId: string = req.appContext.appId;

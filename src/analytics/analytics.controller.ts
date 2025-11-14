@@ -1,11 +1,16 @@
 import { Controller, Get, Query, Req, UseGuards, UseInterceptors } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiTags } from '@nestjs/swagger';
 import { AnalyticsService } from './analytics.service';
 import { EventSummaryQuery, UserStatsQuery } from './dto';
 import { ApiKeyGuard } from '../ingest/api-key.guard';
 import { ReadRateLimitInterceptor } from './read-rate-limit.interceptor';
 
 @ApiTags('Analytics / Queries')
+@ApiHeader({
+  name: 'x-api-key',
+  description: 'API key for authenticating analytics requests',
+  required: true,
+})
 @Controller('api/analytics')
 @UseGuards(ApiKeyGuard)
 @UseInterceptors(ReadRateLimitInterceptor)

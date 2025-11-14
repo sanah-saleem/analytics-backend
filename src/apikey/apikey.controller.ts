@@ -3,7 +3,7 @@ import { DevAuthGuard } from "src/auth/dev-auth.guard";
 import { ApiKeyService } from "./apikey.service";
 import { GetApiKeyQuery, RegenerateDto, RegisterAppDto, RevokeDto } from "./dto";
 import { PrismaService } from "src/common/prisma.service";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiHeader, ApiTags } from "@nestjs/swagger";
 
 @ApiTags('Auth / API Keys')
 @Controller('api/auth')
@@ -16,6 +16,11 @@ export class ApiKeyController {
 
     //Registers one app and issues one api key
     @Post('register')
+    @ApiHeader({
+        name: 'x-dev-user',
+        required: true,
+        description: 'Developer email for creating/owning apps (temporary for assignment).'
+    })
     async register(@Body() body: RegisterAppDto, @Req() req: any) {
         const email = req.user.email as string;
         const app = await this.service.registerApp(email, body.name);
